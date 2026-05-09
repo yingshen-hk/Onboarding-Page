@@ -1,0 +1,210 @@
+/* 自定义字体声明：引入山海艺术字体，作为页面主要字体 */
+@font-face{
+	font-family: 'ShanHai'; /* 字体名称，供后续调用 */
+	src: url('../ttf/ShanHaiZhongXiaYeWuYuW-2.ttf') format('truetype'); /* 字体文件路径 */
+	font-weight: normal; /* 字体粗细 */
+	font-style: normal; /* 字体样式 */
+	font-display: swap; /* 字体加载策略：优先显示系统字体，加载完成后替换 */
+}
+
+/* 根元素样式：隐藏滚动条，避免页面滚动 */
+html{
+	overflow: hidden !important;
+}
+
+/* 页面主体样式：重置默认边距，设置背景、字体 */
+body{
+	margin: 0; /* 清除默认外边距 */
+	padding: 0; /* 清除默认内边距 */
+	/* 背景图由JS动态设置，这里留空 */
+	background-size: cover; /* 背景图覆盖整个容器 */
+	background-position: center; /* 背景图居中显示 */
+	background-attachment: fixed; /* 背景图固定，不随滚动移动 */
+	font-family: 'ShanHai', "Microsoft Yahei", sans-serif; /* 字体优先级：山海字体 > 微软雅黑 > 无衬线字体 */
+}
+
+/* 背景图容器样式：全屏覆盖，作为底层背景 */
+.bg{
+	position: fixed; top:0; left:0; width:100%; height:100%; /* 固定定位，占满屏幕 */
+	/* 背景图由JS动态设置，这里留空 */
+	background-size: cover; background-position: center; /* 背景图覆盖+居中 */
+	z-index: -2; /* 层级低于模糊层，保证模糊层在上方 */
+}
+
+/* 背景模糊层样式：实现毛玻璃效果，交互时动态调整模糊度 */
+.bg-blur{
+	position: fixed; top:0; left:0; width:100%; height:100%; /* 固定定位，占满屏幕 */
+	background: rgba(255,255,255,0.1); /* 半透明白色背景，增强模糊效果 */
+	z-index: -1; /* 层级高于背景图，低于主内容 */
+	backdrop-filter: blur(0px); /* 初始模糊度为0 */
+	transition: all 0.5s ease; /* 所有属性变化过渡动画，时长0.5秒 */
+}
+
+/* 主内容容器样式：占满视口高度，相对定位 */
+.main{
+	width: 100%; height: 100vh; /* 宽度100%，高度等于视口高度 */
+	position: relative; /* 作为子元素绝对定位的参考 */
+}
+
+/* 时间容器：居中显示时钟，配置过渡动画 */
+.time-wrapper{
+	text-align: center; /* 文字居中 */
+	margin-top: 150px; /* 顶部外边距，调整垂直位置 */
+	transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1); /* 自定义缓动曲线的过渡动画 */
+	transform: scale(1); /* 初始缩放比例1 */
+}
+
+/* 时钟主标题样式：大号字体，基础样式 */
+.biaoti{
+	font-size: 110px; /* 字体大小 */
+	margin: 0; /* 清除默认外边距 */
+	color: rgb(0, 0, 0); /* 字体颜色 */
+	font-weight: 300; /* 字体粗细 */
+	transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1); /* 过渡动画 */
+	cursor: pointer; /* 鼠标悬停显示手型 */
+}
+
+/* 时钟标题悬停效果：文字发光 */
+.biaoti:hover{
+	text-shadow: 0 0 30px #fff; /* 白色文字阴影，实现发光效果 */
+}
+
+/* 时间详情文本样式：初始隐藏，配置过渡动画 */
+.time-info{
+	font-size: 26px; /* 字体大小 */
+	color: rgb(0, 0, 0); /* 字体颜色 */
+	margin-top: 10px; /* 顶部外边距 */
+	opacity: 0; /* 初始透明度0，隐藏 */
+	transform: translateY(20px); /* 初始向下偏移20px */
+	transition: all 0.6s ease; /* 过渡动画 */
+}
+
+/* 天气信息文本样式：初始隐藏，配置过渡动画 */
+.weather-info{
+	font-size: 22px; /* 字体大小 */
+	color: rgb(0, 0, 0); /* 字体颜色 */
+	margin-top: 8px; /* 顶部外边距 */
+	opacity: 0; /* 初始透明度0，隐藏 */
+	transform: translateY(20px); /* 初始向下偏移20px */
+	transition: all 0.6s ease; /* 过渡动画 */
+}
+
+/* 激活状态：显示时间详情和天气信息 */
+.time-wrapper.active .time-info,
+.time-wrapper.active .weather-info{
+	opacity: 1; /* 透明度1，显示 */
+	transform: translateY(0); /* 偏移归位 */
+}
+
+/* 激活状态：时间容器居中放大 */
+.time-wrapper.active{
+	position: absolute; /* 绝对定位 */
+	top: 50%; left: 50%; /* 定位到屏幕中心 */
+	transform: translate(-50%, -50%) scale(1); /* 居中偏移 + 缩放 */
+	margin-top: 0 !important; /* 清除顶部外边距 */
+}
+
+/* 激活状态：时钟标题放大+增强发光效果 */
+.time-wrapper.active .biaoti{
+	font-size: 170px; /* 放大字体 */
+	text-shadow: 0 0 50px #ffffff; /* 增强发光效果 */
+}
+
+/* 激活状态：强制显示时间详情 */
+.time-wrapper.active .time-info{
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* 搜索框容器：弹性布局，居中展示 */
+.search{
+	display: flex; justify-content: center; /* 水平居中 */
+	margin-top: 40px; /* 顶部外边距 */
+}
+
+/* 搜索输入框样式：毛玻璃效果，自定义字体 */
+.search_input{
+	width: 600px; height:36px; /* 宽高 */
+	border-radius:25px; /* 圆角，实现胶囊形状 */
+	border:1px solid rgba(255,255,255, 0.4); /* 半透明白色边框 */
+	background:rgba(255,255,255, 0.2); /* 半透明白色背景，毛玻璃效果 */
+	text-align:center; /* 文字居中 */
+	font-size:20px; /* 字体大小 */
+	color:rgb(0, 0, 0); /* 输入文字颜色 */
+	outline:none; /* 清除默认焦点轮廓 */
+	transition:all 0.3s; /* 过渡动画 */
+	font-family: 'ShanHai', "Microsoft Yahei", sans-serif; /* 自定义字体 */
+}
+
+/* 搜索框悬停/聚焦效果：增强透明度+发光 */
+.search_input:hover,.search_input:focus{
+	background:rgba(255,255,255, 0.4); /* 提高背景透明度 */
+	box-shadow:0 0 12px #fff; /* 白色盒子阴影，发光效果 */
+}
+
+/* 搜索框占位符样式：统一字体 */
+.search_input::placeholder {
+	font-family: 'ShanHai', "Microsoft Yahei", sans-serif; /* 自定义字体 */
+	color: rgba(0, 0, 0, 0.8); /* 占位符颜色 */
+}
+/* 兼容Chrome/Safari浏览器占位符 */
+.search_input::-webkit-input-placeholder {
+	font-family: 'ShanHai', "Microsoft Yahei", sans-serif;
+}
+/* 兼容Firefox旧版浏览器占位符 */
+.search_input:-moz-placeholder {
+	font-family: 'ShanHai', "Microsoft Yahei", sans-serif;
+}
+
+/* 导航按钮容器：弹性布局，居中展示 */
+.buttons{
+	display:flex; justify-content:center; /* 水平居中 */
+	margin-top:40px; /* 顶部外边距 */
+}
+
+/* 导航按钮样式：毛玻璃效果，自定义字体 */
+.button_daohang{
+	width:80px; height:50px; /* 宽高 */
+	margin:0 15px; /* 左右外边距，间距 */
+	border:1px solid rgba(255,255,255,0.4); /* 半透明白色边框 */
+	border-radius:25px; /* 圆角 */
+	background:rgba(255,255,255,0.2); /* 半透明白色背景，毛玻璃效果 */
+	color:rgb(0, 0, 0); /* 文字颜色 */
+	font-size:16px; /* 字体大小 */
+	transition:all 0.5s; /* 过渡动画 */
+	font-family: 'ShanHai', "Microsoft Yahei", sans-serif; /* 自定义字体 */
+}
+
+/* 导航按钮悬停效果：放大+增强透明度+发光 */
+.button_daohang:hover{
+	background:rgba(255,255,255,0.4); /* 提高背景透明度 */
+	box-shadow:0 0 12px #fff; /* 白色盒子阴影，发光效果 */
+	width:100px; height:60px; /* 放大尺寸 */
+	font-size:22px; /* 放大字体 */
+}
+
+/* 一言文案容器：绝对定位，底部居中 */
+.slogan{
+	position:absolute; bottom:150px; /* 定位到底部，距离150px */
+	width:100%; text-align:center; /* 宽度100%，文字居中 */
+}
+
+/* 一言文案文本样式：配置过渡动画 */
+.slogan2{
+	color:rgb(0, 0, 0); /* 文字颜色 */
+	transition:all 0.5s; /* 过渡动画 */
+}
+
+/* 页脚容器：绝对定位，底部居中 */
+.footer{
+	position:absolute; bottom:5px; /* 定位到底部，距离5px */
+	width:100%; text-align:center; /* 宽度100%，文字居中 */
+	color:rgb(0, 0, 0); /* 文字颜色 */
+	font-size:10px; /* 字体大小 */
+}
+
+/* 页脚链接样式：强制继承颜色，清除下划线 */
+.footer a{
+	color:rgb(0, 0, 0) !important; /* 强制文字颜色 */
+	text-decoration:none; /* 清除下划线 */
+}

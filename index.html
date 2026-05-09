@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 字符编码声明：UTF-8 确保中文正常显示 -->
+    <meta charset="utf-8" />
+    <!-- 视口配置：适配移动端，设置初始缩放比例为1.0 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 引入核心样式文件：控制页面所有样式 -->
+    <link rel="stylesheet" href="css/main.css"/>
+    <!-- 引入配置文件：存放自定义配置项（标题、背景图、导航等） -->
+    <script src="js/config.js"></script>
+    <!-- 动态设置网站标题和favicon图标：从配置文件读取参数 -->
+    <script>
+        // 设置页面标题
+        document.title = SITE_CONFIG.title;
+        // 创建favicon链接标签
+        const link = document.createElement('link');
+        link.rel = 'icon';
+        link.href = SITE_CONFIG.favicon;
+        link.type = 'image/x-icon';
+        document.head.appendChild(link);
+    </script>
+    <!-- 备用标题：若JS加载失败时显示 -->
+    <title>引导页</title>
+</head>
+<body>
+    <!-- 背景图容器：底层背景图展示 -->
+    <div class="bg"></div>
+    <!-- 背景模糊层：实现毛玻璃效果，交互时动态调整模糊度 -->
+    <div class="bg-blur"></div>
+
+    <!-- 主内容容器：包含时钟、搜索框、导航按钮 -->
+    <div class="main">
+        <!-- 时间容器：显示实时时钟、日期、天气信息 -->
+		<div class="time-wrapper" id="timeWrapper">
+            <!-- 时钟主标题：显示时分秒 -->
+    		<p class="biaoti" id="biaoti">00:00:00</p>
+            <!-- 时间详情：显示年月日、星期、节日 -->
+    		<p class="time-info" id="timeInfo"></p>
+            <!-- 天气信息：显示定位城市、温度、天气状况 -->
+    		<p class="weather-info" id="weatherInfo"></p>
+		</div>
+
+        <!-- 搜索框容器：居中展示搜索输入框 -->
+        <div class="search">
+            <input 
+                type="text" 
+                id="input_search" 
+                placeholder=""
+                class="search_input"
+                onkeydown="search(event)" 
+            />  <!-- 回车触发搜索函数 -->
+        </div>
+        
+        <!-- 导航按钮容器：由JS动态渲染导航按钮，初始为空 -->
+        <div class="buttons">
+            <!-- 按钮由JS动态渲染，此处留空 -->
+        </div>
+    </div>
+
+    <!-- 一言文案容器：显示随机语录，点击可刷新 -->
+    <div class="slogan">
+        <p id="slogan2" class="slogan2" onclick="loadYiYan()"></p>
+    </div>
+
+    <!-- 页脚容器：显示版权信息、自定义链接，由JS动态渲染 -->
+    <p class="footer"></p>
+
+    <!-- 引入核心逻辑文件：处理时钟、天气、交互、渲染等功能 -->
+    <script src="js/main.js"></script>
+</body>
+</html>
